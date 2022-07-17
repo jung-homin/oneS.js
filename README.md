@@ -32,4 +32,17 @@ $(selector).addEventOn({
 - `onEvent`: Function  
    class "on"이 추가될 떄 실행 될 콜백함수.
 - `offEvent`: Function  
-   class "on"이 삭제될 때 실행 될 콜백함수.
+   class "on"이 삭제될 때 실행 될 콜백함수.  
+
+
+예시
+
+```javascript
+$(window).addEventOn({
+  event: "scroll",
+  target: $(".oneHeader"),
+  onIf: function () {
+    return $(window).scrollTop() > $(".oneHeader").innerHeight();
+  },
+});
+```

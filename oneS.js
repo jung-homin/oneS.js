@@ -26,12 +26,16 @@
     $(this).on(option.event, function (e) {
       if (option.onIf(e)) {
         option.target.addClass("on");
-        option.onEvent();
+        option.onEvent(e);
       } else if (option.offIf(e)) {
         option.target.removeClass("on");
-        option.offEvent();
+        option.offEvent(e);
       }
     });
+  }
+
+  function replaceTag() {
+    return false;
   }
 
   var allExports = {
