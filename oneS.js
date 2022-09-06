@@ -7,6 +7,24 @@
     };
   }
 
+  function find(obj, predicate) {
+    for (var i = 0; i < obj.length; i++) {
+      if (predicate(obj[i])) return obj[i];
+    }
+  }
+
+  function findIndex(obj, predicate) {
+    for (var i = 0; i < obj.length; i++) {
+      if (predicate(obj[i])) return i;
+    }
+  }
+
+  function multipleRemoveClass(obj, className) {
+    for (var i = 0; i < obj.length; i++) {
+      obj[i].classList.remove(className);
+    }
+  }
+
   function forKeys(obj, iterator) {
     var keys = Object.keys(obj);
     keys.forEach(function (key) {
@@ -45,9 +63,9 @@
     target.classList.remove(htmlClass);
   }
 
-  function addEventOn(targetQuery, obj = {}) {
+  function addEventOn(selector, obj = {}) {
     var option = {
-      target: document.querySelector(targetQuery),
+      target: document.querySelector(selector),
       event: "click",
       onIf: function () {
         return !hasClass(this.target, "on");
@@ -94,10 +112,48 @@
     };
   }
 
+  function tab(
+    selector,
+    obj = {
+      target: null,
+    }
+  ) {
+    var option = {
+      tab: document.querySelector(selector),
+      contents: document.querySelector(obj.target),
+    };
+    option = mergeObj(option, obj);
+
+    option.tab.addEventListener("click", function (e) {
+      var tabList = option.tab.children;
+      var currentTab = find(e.path, function (item) {
+        return item.tagName === "LI";
+      });
+      var currnetTabIndex = findIndex(tabList, function (item) {
+        return item === currentTab;
+      });
+      var contentsList = option.contents.children;
+      var currentContents = contentsList[currnetTabIndex];
+      multipleRemoveClass(tabList, "on");
+      multipleRemoveClass(contentsList, "on");
+      currentTab.classList.add("on");
+      currentContents.classList.add("on");
+      var eventObj = {
+        tabList: tabList,
+        currentTab: currentTab,
+        currnetTabIndex: currnetTabIndex,
+        contentsList: contentsList,
+        currentContents: currentContents,
+      };
+      option.onEvent(eventObj);
+    });
+  }
+
   var allExports = {
     addEventOn: addEventOn,
     returnValueFunc: returnValueFunc,
     Media: Media,
+    tab: tab,
   };
 
   return allExports;

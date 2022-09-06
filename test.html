@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./oneS.js""></script>
+  </head>
+  <body>
+    <ul id="tab">
+      <li><a href="#none">tab1</a></li>
+      <li>tab2</li>
+      <li>tab3</li>
+      <li>tab4</li>
+      <li>tab5</li>
+    </ul>
+    <ul id="contents">
+      <li>contents1</li>
+      <li>contents2</li>
+      <li>contents3</li>
+      <li>contents4</li>
+      <li>contents5</li>
+    </ul>
+    <script>
+      oneS.tab("#tab", {
+        target: "#contents",
+        onEvent: function(e) {
+            console.log(e);
+        }
+      });
+    </script>
+  </body>
+</html>
