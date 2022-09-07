@@ -1,5 +1,5 @@
 (function (factory) {
-  window.oneS = factory();
+  $.fn = $.extend($.fn, factory());
 })(function () {
   function returnValueFunc(value) {
     return function () {
@@ -19,12 +19,6 @@
     }
   }
 
-  function multipleRemoveClass(obj, className) {
-    for (var i = 0; i < obj.length; i++) {
-      obj[i].classList.remove(className);
-    }
-  }
-
   function forKeys(obj, iterator) {
     var keys = Object.keys(obj);
     keys.forEach(function (key) {
@@ -38,54 +32,28 @@
     }
   }
 
-  function mergeObj() {
-    var resultObj = {};
-    var arg = arguments;
-    forLength(arg, function (i) {
-      var mergedObj = arg[i];
-      forKeys(mergedObj, function (key) {
-        resultObj[key] = mergedObj[key];
-      });
-    });
-    return resultObj;
-  }
-
-  function hasClass(target, htmlClass) {
-    var classList = Object.values(target.classList);
-    return classList.indexOf(htmlClass) > -1;
-  }
-
-  function addClass(target, htmlClass) {
-    target.classList.add(htmlClass);
-  }
-
-  function removeClass(target, htmlClass) {
-    target.classList.remove(htmlClass);
-  }
-
-  function addEventOn(selector, obj = {}) {
+  function addEventOn(obj = {}) {
     var option = {
-      target: document.querySelector(selector),
+      target: this,
       event: "click",
       onIf: function () {
-        return !hasClass(this.target, "on");
+        return !this.target.hasClass("on");
       },
       offIf: function () {
-        return hasClass(this.target, "on");
+        return this.target.hasClass("on");
       },
       onEvent: returnValueFunc(false),
       offEvent: returnValueFunc(false),
     };
 
-    option = mergeObj(option, obj);
+    option = $.extend(option, obj);
 
-    option.target.addEventListener(option.event, function (e) {
-      console.log(option.onIf(e));
+    this.on(option.event, function (e) {
       if (option.onIf(e)) {
-        addClass(option.target, "on");
+        $(this).addClass("on");
         option.onEvent(e);
       } else if (option.offIf(e)) {
-        removeClass(option.target, "on");
+        $(this).removeClass("on");
         option.offEvent(e);
       }
     });
@@ -112,41 +80,22 @@
     };
   }
 
-  function tab(
-    selector,
-    obj = {
-      target: null,
-    }
-  ) {
+  function tab(obj) {
+    obj.contents = $(obj.contents);
     var option = {
-      tab: document.querySelector(selector),
-      contents: document.querySelector(obj.target),
+      contents: null,
     };
-    option = mergeObj(option, obj);
 
-    option.tab.addEventListener("click", function (e) {
-      var tabList = option.tab.children;
-      var currentTab = find(e.path, function (item) {
-        return item.tagName === "LI";
+    option = $.extend(option, obj);
+
+    $(this)
+      .children()
+      .on("click", function (e) {
+        $(this).siblings().removeClass("on");
+        $(this).addClass("on");
+        option.contents.children().removeClass("on");
+        option.contents.children().eq($(this).index()).addClass("on");
       });
-      var currnetTabIndex = findIndex(tabList, function (item) {
-        return item === currentTab;
-      });
-      var contentsList = option.contents.children;
-      var currentContents = contentsList[currnetTabIndex];
-      multipleRemoveClass(tabList, "on");
-      multipleRemoveClass(contentsList, "on");
-      currentTab.classList.add("on");
-      currentContents.classList.add("on");
-      var eventObj = {
-        tabList: tabList,
-        currentTab: currentTab,
-        currnetTabIndex: currnetTabIndex,
-        contentsList: contentsList,
-        currentContents: currentContents,
-      };
-      option.onEvent(eventObj);
-    });
   }
 
   var allExports = {
