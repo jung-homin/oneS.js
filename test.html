@@ -25,9 +25,12 @@
     </ul>
     <script>
       $("#tab").tab({
-        contents: "#contents"
-      })
-      $("#contents").addEventOn()
+        contents: "#contents",
+        changeEvent: function(e) {
+          e.tab.prevTab.remove();
+        }
+      });
+      $("#contents").addEventOn();
     </script>
   </body>
 </html>

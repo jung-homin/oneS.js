@@ -1,7 +1,7 @@
 (function (factory) {
-  $.fn = $.extend($.fn, factory());
+  $.extend($.fn, factory());
 })(function () {
-  function returnValueFunc(value) {
+  function returnValue(value) {
     return function () {
       return value;
     };
@@ -11,6 +11,10 @@
     for (var i = 0; i < obj.length; i++) {
       if (predicate(obj[i])) return obj[i];
     }
+  }
+
+  function isType(value, type) {
+    return typeof value === type;
   }
 
   function findIndex(obj, predicate) {
@@ -42,11 +46,11 @@
       offIf: function () {
         return this.target.hasClass("on");
       },
-      onEvent: returnValueFunc(false),
-      offEvent: returnValueFunc(false),
+      onEvent: returnValue(false),
+      offEvent: returnValue(false),
     };
 
-    option = $.extend(option, obj);
+    $.extend(option, obj);
 
     this.on(option.event, function (e) {
       if (option.onIf(e)) {
@@ -81,26 +85,49 @@
   }
 
   function tab(obj) {
-    obj.contents = $(obj.contents);
     var option = {
-      contents: null,
+      tab: $(this),
+      changeEvent: returnValue(false),
     };
+    isType(obj, "string")
+      ? (option.contents = $(obj))
+      : (obj.contents = $(obj.contents));
 
-    option = $.extend(option, obj);
+    $.extend(option, obj);
 
-    $(this)
-      .children()
-      .on("click", function (e) {
+    (function () {
+      var prevTabObj = {
+        prevTab: $(),
+        prevContents: $(),
+        prevIndex: 0,
+      };
+      option.tab.children().on("click", function (e) {
+        var tabObj = {
+          currentTab: $(this),
+          currentContents: option.contents.children().eq($(this).index()),
+          currentIndex: $(this).index(),
+        };
+        $.extend(tabObj, prevTabObj);
+
         $(this).siblings().removeClass("on");
         $(this).addClass("on");
-        option.contents.children().removeClass("on");
-        option.contents.children().eq($(this).index()).addClass("on");
+        tabObj.currentContents.siblings().removeClass("on");
+        tabObj.currentContents.addClass("on");
+
+        $.extend(e, { tab: tabObj });
+        option.changeEvent(e);
+        prevTabObj = {
+          prevTab: tabObj.currentTab,
+          prevContents: tabObj.currentContents,
+          prevIndex: tabObj.currentIndex,
+        };
       });
+    })();
   }
 
   var allExports = {
     addEventOn: addEventOn,
-    returnValueFunc: returnValueFunc,
+    returnValue: returnValue,
     Media: Media,
     tab: tab,
   };
