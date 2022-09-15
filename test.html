@@ -7,8 +7,13 @@
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./oneS.js""></script>
+    <style>
+      .testOn {width: 200px; height: 200px; transition: all 0.3s; background-color: #000; color: #fff;}
+      .testOn.on {background-color: lightcoral;}
+    </style>
   </head>
   <body>
+    <div class="testOn"></div>
     <ul id="tab">
       <li><a href="#none">tab1</a></li>
       <li>tab2</li>
@@ -24,13 +29,20 @@
       <li>contents5</li>
     </ul>
     <script>
+      var media = new Media({
+        mobile: 640,
+        tablet: 1220,
+        desktop: Infinity,
+      });
+
+      $(".testOn").addEventOn();
+
       $("#tab").tab({
         contents: "#contents",
         changeEvent: function(e) {
           e.tab.prevTab.remove();
         }
       });
-      $("#contents").addEventOn();
     </script>
   </body>
 </html>

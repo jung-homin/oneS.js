@@ -1,5 +1,6 @@
 (function (factory) {
   $.extend($.fn, factory());
+  window.Media = factory().Media;
 })(function () {
   function returnValue(value) {
     return function () {
