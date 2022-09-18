@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./oneS.js""></script>
   </head>
   <body>
@@ -23,11 +24,15 @@
       <li>contents5</li>
     </ul>
     <script>
-      oneS.tab("#tab", {
-        target: "#contents",
-        onEvent: function(e) {
-            console.log(e);
+      var oneS = new Afo({
+        breakPoint: {
+          desktop: Infinity,
+          tablet: 1220,
+          mobile: 640,
         }
+      })
+      oneS.tab("#tab", {
+        content: "#contents",
       });
     </script>
   </body>
